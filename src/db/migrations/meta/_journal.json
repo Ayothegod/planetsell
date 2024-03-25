@@ -22,6 +22,20 @@
       "when": 1711365808167,
       "tag": "0002_acoustic_grandmaster",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1711389448812,
+      "tag": "0003_mean_wither",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1711389497699,
+      "tag": "0004_thin_stingray",
+      "breakpoints": true
     }
   ]
 }
