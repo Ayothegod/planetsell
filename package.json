@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate":"drizzle-kit generate:pg --schema ./src/db/schema.ts --out=./src/db/migrations",
+    "db:migrate":"./src/db/migrate.ts",
+    "db:seed":"./src/db/seed.ts"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.3",
