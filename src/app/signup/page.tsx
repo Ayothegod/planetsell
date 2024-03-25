@@ -5,6 +5,7 @@ import { lucia } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { generateId } from "lucia";
 import { userTable, sessionTable } from "@/db/schema";
+import { eq, lt, gte, ne } from "drizzle-orm";
 
 export default async function Page() {
   return (
@@ -12,10 +13,20 @@ export default async function Page() {
       <h1>Create an account</h1>
       <form action={signup}>
         <label htmlFor="username">Username</label>
-        <input name="username" id="username" />
+        <input
+          placeholder="username"
+          className=""
+          name="username"
+          id="username"
+        />
         <br />
         <label htmlFor="password">Password</label>
-        <input type="password" name="password" id="password" />
+        <input
+          placeholder="password"
+          type="password"
+          name="password"
+          id="password"
+        />
         <br />
         <button>Continue</button>
       </form>
@@ -25,17 +36,16 @@ export default async function Page() {
 
 async function signup(formData: FormData) {
   "use server";
+  console.log("start signup");
   try {
     const username = formData.get("username");
     if (
       typeof username !== "string" ||
       username.length < 3 ||
-      username.length > 31 ||
-      !/^[a-z0-9_-]+$/.test(username)
+      username.length > 31 
+    //   || !/^[a-z0-9_-]+$/.test(username)
     ) {
-      return {
-        error: "Invalid username",
-      };
+      return console.log("Invalid username");
     }
     const password = formData.get("password");
     if (
@@ -43,22 +53,29 @@ async function signup(formData: FormData) {
       password.length < 6 ||
       password.length > 255
     ) {
-      return {
-        error: "Invalid password",
-      };
+      return console.log("Invalid password");
     }
-  
+
     const hashedPassword = await new Argon2id().hash(password);
     const userId = generateId(15);
-  
+
     // TODO: check if username is already used
-  
-    await db.insert(userTable).values({
+    const userExist = await db
+      .select()
+      .from(userTable)
+      .where(eq(userTable.id, userId));
+    console.log(userExist);
+
+    if (userExist.length > 0) {
+      return console.log("User already exist! please sign in.");
+    }
+
+    const user = await db.insert(userTable).values({
       id: userId,
       username: username,
       password: hashedPassword,
     });
-  
+
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
@@ -66,10 +83,10 @@ async function signup(formData: FormData) {
       sessionCookie.value,
       sessionCookie.attributes
     );
-    return redirect("/");
+    console.log("complete signup");
+    console.log(user);
+    // return redirect("/");
   } catch (error) {
     console.log(error);
-    
   }
 }
-

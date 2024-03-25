@@ -11,7 +11,8 @@
     "db:migrate": "node -r esbuild-register src/db/migrate.ts",
     "migrate": "drizzle-kit generate:pg --schema ./src/db/schema.ts --out=./src/db/migrations && node -r esbuild-register src/db/migrate.ts",
     "db:seed": "./src/db/seed.ts",
-    "db:push": "drizzle-kit push:pg --config=src/db/drizzle.config.ts"
+    "db:push": "drizzle-kit push:pg --config=src/db/drizzle.config.ts",
+    "db:studio": "drizzle-kit studio --config=src/db/drizzle.config.ts"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.3",
