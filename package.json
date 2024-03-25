@@ -1,8 +1,8 @@
 {
-  "name": "eventr",
+  "name": "planetsell",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
+  "scripts": { 
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,7 +11,7 @@
     "db:migrate": "node -r esbuild-register src/db/migrate.ts",
     "migrate": "drizzle-kit generate:pg --schema ./src/db/schema.ts --out=./src/db/migrations && node -r esbuild-register src/db/migrate.ts",
     "db:seed": "./src/db/seed.ts",
-    "db:push": "drizzle-kit push:pg"
+    "db:push": "drizzle-kit push:pg --config=src/db/drizzle.config.ts"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.3",
