@@ -1,9 +1,39 @@
 {
-  "id": "99c75867-89b5-42fa-b6f5-e41c6bdcd269",
-  "prevId": "04e2c97b-c732-4e98-9015-c7578340cda8",
+  "id": "6754cb6d-7b98-4091-9d89-72e367453692",
+  "prevId": "a6221c1c-fbaa-42c3-a020-a903157ea351",
   "version": "5",
   "dialect": "pg",
   "tables": {
+    "tags": {
+      "name": "tags",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "tags_tags_unique": {
+          "name": "tags_tags_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "tags"
+          ]
+        }
+      }
+    },
     "todo": {
       "name": "todo",
       "schema": "",
@@ -32,6 +62,36 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_name_unique": {
+          "name": "user_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
     }
   },
   "enums": {},
