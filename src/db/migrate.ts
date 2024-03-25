@@ -1,21 +1,15 @@
-import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { Client } from "pg";
+import { client, db } from "./db";
+// src/db/migrations
 
-export const client = new Client({
-  connectionString:
-    "postgres://postgres:postgrespass@localhost:5432/planetsell",
-});
-client.connect();
-export const db = drizzle(client);
 const connectDb = async () => {
-
   try {
     await migrate(db, {
-      migrationsFolder: "src/db/migrations",
+      migrationsFolder: "./migrations",
       migrationsTable: "my_migrations",
     });
-    console.log("migartions successful");
+    console.log("migrations successful");
+    await client.end();
   } catch (error) {
     console.log(error);
     console.log("error");
@@ -24,5 +18,3 @@ const connectDb = async () => {
 };
 connectDb();
 
-// await client.end();
-// export default db;
