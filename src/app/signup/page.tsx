@@ -5,7 +5,7 @@ import { lucia } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { generateId } from "lucia";
 import { userTable, sessionTable } from "@/db/schema";
-import { eq, lt, gte, ne } from "drizzle-orm";
+import { eq, lt, gte, ne, and } from "drizzle-orm";
 
 export default async function Page() {
   return (
@@ -36,14 +36,13 @@ export default async function Page() {
 
 async function signup(formData: FormData) {
   "use server";
-  console.log("start signup");
   try {
     const username = formData.get("username");
     if (
       typeof username !== "string" ||
       username.length < 3 ||
-      username.length > 31 
-    //   || !/^[a-z0-9_-]+$/.test(username)
+      username.length > 31
+      //   || !/^[a-z0-9_-]+$/.test(username)
     ) {
       return console.log("Invalid username");
     }
@@ -58,33 +57,34 @@ async function signup(formData: FormData) {
 
     const hashedPassword = await new Argon2id().hash(password);
     const userId = generateId(15);
+    // console.log(username, hashedPassword, userId);
 
-    // TODO: check if username is already used
     const userExist = await db
       .select()
       .from(userTable)
-      .where(eq(userTable.id, userId));
-    console.log(userExist);
+      .where(and(eq(userTable.id, userId), eq(userTable.username, username)));
+    // console.log(userExist);
 
-    if (userExist.length > 0) {
+    if (userExist.length === 1) {
       return console.log("User already exist! please sign in.");
     }
+    console.log("User dosent exist");
 
-    const user = await db.insert(userTable).values({
-      id: userId,
-      username: username,
-      password: hashedPassword,
-    });
+    // const user = await db.insert(userTable).values({
+    //   id: userId,
+    //   username: username,
+    //   password: hashedPassword,
+    // });
 
-    const session = await lucia.createSession(userId, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes
-    );
-    console.log("complete signup");
-    console.log(user);
+    // const session = await lucia.createSession(userId, {});
+    // const sessionCookie = lucia.createSessionCookie(session.id);
+    // cookies().set(
+    //   sessionCookie.name,
+    //   sessionCookie.value,
+    //   sessionCookie.attributes
+    // );
+    // console.log("complete signup");
+    // console.log(user);
     // return redirect("/");
   } catch (error) {
     console.log(error);
